@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Users, DollarSign, ArrowUpRight, ShieldCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
+
+interface Member {
+  name: string;
+  role: string;
+  avatar: string;
+}
 
 interface TeamCardProps {
   name: string;
@@ -15,6 +22,7 @@ interface TeamCardProps {
   stipend: string;
   skills: string[];
   theme: "blue" | "pink" | "purple" | "green" | "amber" | "cyan" | "rose";
+  members?: Member[];
 }
 
 const themeStyles = {
@@ -47,9 +55,9 @@ const accentColors = {
   rose: "bg-rose-500",
 };
 
-export function TeamCard({ name, company, description, seats, stipend, skills, theme }: TeamCardProps) {
+export function TeamCard({ name, company, description, seats, stipend, skills, theme, members = [] }: TeamCardProps) {
   return (
-    <div className="bento-card group h-full flex flex-col overflow-hidden relative border-2 hover:border-primary/20 transition-all duration-500">
+    <div className="bento-card group h-full flex flex-col overflow-hidden relative border-2 hover:border-primary/20 transition-all duration-500 bg-white shadow-xl shadow-black/[0.02]">
       <div className={cn("h-2.5 w-full", accentColors[theme])}></div>
       
       <div className="p-10 flex-grow flex flex-col">
@@ -73,16 +81,37 @@ export function TeamCard({ name, company, description, seats, stipend, skills, t
           </div>
         </div>
 
-        <p className="text-base text-muted-foreground line-clamp-3 mb-8 flex-grow leading-relaxed font-medium italic">
+        <p className="text-base text-muted-foreground line-clamp-2 mb-8 flex-grow leading-relaxed font-medium italic">
           "{description}"
         </p>
 
-        <div className="flex flex-wrap gap-3 mb-10">
-          <Badge variant="secondary" className="flex items-center gap-2 rounded-full px-5 py-2 border-2 font-bold text-[11px] uppercase tracking-widest">
+        {members.length > 0 && (
+          <div className="mb-8 space-y-3">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Active Members</p>
+            <div className="flex -space-x-3">
+              {members.map((member, i) => (
+                <div key={i} className="relative group/avatar">
+                  <div className="w-12 h-12 rounded-2xl border-4 border-white overflow-hidden bg-muted shadow-lg transition-transform group-hover/avatar:scale-110 group-hover/avatar:z-10 z-0">
+                    <Image src={member.avatar} alt={member.name} width={48} height={48} />
+                  </div>
+                  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/avatar:opacity-100 transition-opacity whitespace-nowrap z-50">
+                    {member.name} • {member.role}
+                  </div>
+                </div>
+              ))}
+              <div className="w-12 h-12 rounded-2xl border-4 border-white bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
+                +{parseInt(seats.split('/')[1]) - members.length}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-3 mb-8">
+          <Badge variant="secondary" className="flex items-center gap-2 rounded-full px-5 py-2 border-2 font-bold text-[11px] uppercase tracking-widest bg-white">
             <Users size={14} className="text-primary" />
             {seats} Open
           </Badge>
-          <Badge variant="secondary" className="flex items-center gap-2 rounded-full px-5 py-2 border-2 font-bold text-[11px] uppercase tracking-widest">
+          <Badge variant="secondary" className="flex items-center gap-2 rounded-full px-5 py-2 border-2 font-bold text-[11px] uppercase tracking-widest bg-white">
             <DollarSign size={14} className="text-emerald-500" />
             {stipend}
           </Badge>
