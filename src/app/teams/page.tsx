@@ -1,26 +1,12 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, SlidersHorizontal, Users, Palette, Code, Film, PlayCircle, Image as ImageIcon, Sparkles } from "lucide-react";
+import { Search, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-
-const CATEGORIES = [
-  { id: "all", label: "All Roles", icon: Sparkles, color: "primary" },
-  { id: "web", label: "Web Developer", icon: Code, color: "blue" },
-  { id: "uiux", label: "UI/UX", icon: Palette, color: "pink" },
-  { id: "animation", label: "Animation", icon: PlayCircle, color: "purple" },
-  { id: "thumbnail", label: "Thumbnail", icon: ImageIcon, color: "amber" },
-  { id: "reel", label: "Reel Creator", icon: Film, color: "rose" },
-  { id: "film", label: "Film Producer", icon: Film, color: "cyan" },
-  { id: "media", label: "Media Production", icon: Film, color: "indigo" },
-  { id: "other", label: "Other", icon: Users, color: "green" },
-];
 
 const SAMPLE_TEAMS = [
   {
@@ -87,13 +73,11 @@ const SAMPLE_TEAMS = [
 
 export default function TeamsPage() {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
 
   const filtered = SAMPLE_TEAMS.filter(t => {
     const matchesSearch = t.name.toLowerCase().includes(search.toLowerCase()) || 
                          t.company.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = activeCategory === "all" || t.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   return (
@@ -110,26 +94,6 @@ export default function TeamsPage() {
               Find a core team looking for your specific expertise. From high-end code to cinematic production.
             </p>
           </header>
-
-          {/* Category Scroller */}
-          <div className="flex overflow-x-auto pb-6 gap-3 no-scrollbar mb-10">
-            {CATEGORIES.map((cat) => (
-              <Button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                variant={activeCategory === cat.id ? "default" : "outline"}
-                className={cn(
-                  "rounded-full h-12 px-6 flex items-center gap-2 font-bold whitespace-nowrap transition-all duration-300",
-                  activeCategory === cat.id 
-                    ? "vibrant-gradient border-none shadow-lg scale-105" 
-                    : "hover:bg-muted/50 border-2"
-                )}
-              >
-                <cat.icon size={18} />
-                {cat.label}
-              </Button>
-            ))}
-          </div>
 
           <div className="flex flex-col md:flex-row gap-4 mb-12">
             <div className="relative flex-grow">
@@ -158,12 +122,12 @@ export default function TeamsPage() {
                 <Users className="h-12 w-12 text-primary" />
               </div>
               <h2 className="text-3xl font-headline font-bold">No active teams found</h2>
-              <p className="text-muted-foreground font-medium text-lg">No teams currently recruiting for "{activeCategory === 'all' ? 'this role' : activeCategory}".</p>
+              <p className="text-muted-foreground font-medium text-lg">No teams currently matching your search criteria.</p>
               <Button 
-                onClick={() => {setActiveCategory('all'); setSearch('');}} 
+                onClick={() => setSearch('')} 
                 className="rounded-full px-8 font-bold"
               >
-                Clear Filters
+                Clear Search
               </Button>
             </div>
           )}
