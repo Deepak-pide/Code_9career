@@ -1,30 +1,38 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 210 20% 98%; /* Crisp Studio White slightly blueish */
+    --background: 210 40% 98%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 221.2 83.2% 53.3%; /* Electric Blue #3B82F6 */
+    --primary: 250 84% 54%; /* Vibrant Indigo */
     --primary-foreground: 210 20% 98%;
-    --secondary: 210 20% 96.1%;
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 20% 96.1%;
+    --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 20% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 250 84% 95%;
+    --accent-foreground: 250 84% 30%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 1.5rem; /* Large rounded corners as per bento-style requirements */
+    --ring: 250 84% 54%;
+    --radius: 1.5rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 250 84% 54%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 250 84% 54%;
   }
 
   .dark {
@@ -34,7 +42,7 @@
     --card-foreground: 210 20% 98%;
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 250 84% 65%;
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 20% 98%;
@@ -46,7 +54,7 @@
     --destructive-foreground: 210 20% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --ring: 250 84% 65%;
   }
 }
 
@@ -58,22 +66,25 @@
     @apply bg-background text-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
+    @apply font-headline tracking-tight;
   }
 }
 
 .glassmorphism {
   background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.dark .glassmorphism {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .bento-card {
-  @apply bg-white dark:bg-card rounded-[24px] shadow-sm hover:shadow-md transition-all duration-300;
+  @apply bg-white dark:bg-card rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500 border border-white/20;
+}
+
+.vibrant-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, #a855f7 100%);
+}
+
+.vibrant-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500;
 }
