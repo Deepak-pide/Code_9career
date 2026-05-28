@@ -1,3 +1,4 @@
+
 "use client";
 
 import { SidebarProvider, SidebarInset, SidebarTrigger, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
@@ -26,7 +27,7 @@ export default function AdminDashboard() {
         <Sidebar variant="inset" className="border-r-0">
           <SidebarHeader className="p-6">
             <div className="flex items-center gap-3 font-headline font-bold text-2xl px-2">
-              <div className="w-10 h-10 vibrant-gradient rounded-xl flex items-center justify-center text-white text-lg shadow-lg">C9</div>
+              <div className="w-10 h-10 vibrant-gradient rounded-xl flex items-center justify-center text-white text-lg shadow-lg shadow-primary/20">C9</div>
               <span className="tracking-tighter">Admin <span className="text-primary italic">X</span></span>
             </div>
           </SidebarHeader>
@@ -35,8 +36,8 @@ export default function AdminDashboard() {
               {[
                 { label: "Overview", icon: BarChart3, active: true, path: "/dashboard/admin" },
                 { label: "Applications", icon: FileText, active: false, path: "/dashboard/admin/applications" },
-                { label: "Opportunities", icon: Briefcase, active: false, path: "#" },
-                { label: "Talent Registry", icon: Users, active: false, path: "#" },
+                { label: "Core Teams", icon: Users, active: false, path: "/teams" },
+                { label: "Talent Registry", icon: Briefcase, active: false, path: "#" },
                 { label: "Systems", icon: Settings, active: false, path: "#" },
               ].map((item, idx) => (
                 <SidebarMenuItem key={idx}>
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
               <div className="h-6 w-px bg-border hidden md:block"></div>
               <div className="hidden md:block">
                 <h2 className="font-headline font-bold text-xl tracking-tight">Command Center</h2>
-                <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Analytics Engine 2.0</p>
+                <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-muted-foreground">Team Analytics 2.0</p>
               </div>
             </div>
             <div className="flex items-center gap-6">
@@ -94,7 +95,7 @@ export default function AdminDashboard() {
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
               <div>
                 <h1 className="text-4xl font-headline font-bold tracking-tight">System Health</h1>
-                <p className="text-muted-foreground font-medium mt-1">Real-time recruitment performance monitoring.</p>
+                <p className="text-muted-foreground font-medium mt-1">Real-time team performance monitoring.</p>
               </div>
               <div className="flex gap-3">
                 <Button variant="outline" className="rounded-full h-12 px-6 font-bold gap-2">
@@ -102,17 +103,17 @@ export default function AdminDashboard() {
                 </Button>
                 <Button className="rounded-full h-12 px-8 font-bold gap-2 vibrant-gradient shadow-xl shadow-primary/30 border-none transition-transform hover:scale-105">
                   <Plus size={20} />
-                  Post Opportunity
+                  Form New Team
                 </Button>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
-                { label: "Inbound Pipeline", value: "2,842", trend: "+14.2%", icon: Users, color: "indigo" },
-                { label: "Active Roles", value: "24", trend: "+4 this week", icon: Briefcase, color: "fuchsia" },
+                { label: "Total Applications", value: "2,842", trend: "+14.2%", icon: Users, color: "indigo" },
+                { label: "Active Core Teams", value: "48", trend: "+4 this week", icon: Briefcase, color: "fuchsia" },
                 { label: "AI Screenings", value: "156", trend: "42 pending", icon: FileText, color: "amber" },
-                { label: "Successful Hires", value: "312", trend: "92% rate", icon: CheckCircle, color: "emerald" },
+                { label: "Successful Matches", value: "312", trend: "92% rate", icon: CheckCircle, color: "emerald" },
               ].map((stat, i) => (
                 <Card key={i} className="bento-card overflow-hidden group">
                   <div className={cn("h-1.5 w-full", 
@@ -123,7 +124,7 @@ export default function AdminDashboard() {
                   )}></div>
                   <CardHeader className="flex flex-row items-center justify-between pb-4">
                     <CardTitle className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{stat.label}</CardTitle>
-                    <div className={cn("p-2 rounded-xl bg-muted group-hover:bg-primary group-hover:text-white transition-all duration-500")}>
+                    <div className={cn("p-2 rounded-xl bg-muted group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-sm")}>
                       <stat.icon size={16} />
                     </div>
                   </CardHeader>
@@ -142,8 +143,8 @@ export default function AdminDashboard() {
               <Card className="lg:col-span-2 bento-card border-none overflow-hidden">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl font-headline font-bold">Activity Velocity</CardTitle>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Applications vs Interviews</p>
+                    <CardTitle className="text-xl font-headline font-bold">Team Velocity</CardTitle>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Apps vs Formation</p>
                   </div>
                   <div className="flex gap-4">
                     <div className="flex items-center gap-2">
@@ -152,7 +153,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-purple-400"></div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Active</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Teams Formed</span>
                     </div>
                   </div>
                 </CardHeader>
@@ -185,14 +186,14 @@ export default function AdminDashboard() {
 
               <Card className="bento-card border-none overflow-hidden flex flex-col">
                 <CardHeader>
-                  <CardTitle className="text-xl font-headline font-bold">Recent Intelligence</CardTitle>
+                  <CardTitle className="text-xl font-headline font-bold">Recent Synergy</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1 space-y-8">
                   {[
-                    { user: "Alex Rivera", action: "final stage with", role: "NextGen AI", time: "2m ago", status: "priority" },
-                    { user: "AI Engine", action: "summarized", role: "Elena Rodriguez", time: "15m ago", status: "success" },
-                    { user: "Marcus Thorne", action: "updated", role: "Backend Repo", time: "1h ago", status: "neutral" },
-                    { user: "System", action: "flagged", role: "Potential Match", time: "4h ago", status: "warning" },
+                    { user: "Alex Rivera", action: "joined core team", role: "Neural Systems", time: "2m ago", status: "priority" },
+                    { user: "AI Engine", action: "scored synergy", role: "Creative Front-End", time: "15m ago", status: "success" },
+                    { user: "Marcus Thorne", action: "proposed", role: "Full Stack Squad", time: "1h ago", status: "neutral" },
+                    { user: "System", action: "verified", role: "Team Formation", time: "4h ago", status: "warning" },
                   ].map((activity, i) => (
                     <div key={i} className="flex gap-5 items-start group">
                       <div className="relative">
@@ -216,7 +217,7 @@ export default function AdminDashboard() {
                   ))}
                 </CardContent>
                 <div className="p-6 pt-0 mt-auto border-t">
-                  <Button variant="ghost" className="w-full text-xs font-bold uppercase tracking-[0.2em] text-primary">View Full Audit Log</Button>
+                  <Button variant="ghost" className="w-full text-xs font-bold uppercase tracking-[0.2em] text-primary">View Formation Log</Button>
                 </div>
               </Card>
             </div>

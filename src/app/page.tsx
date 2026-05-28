@@ -1,3 +1,4 @@
+
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -24,23 +25,23 @@ export default function Home() {
               <div className="absolute -left-20 -top-20 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -z-10 animate-pulse"></div>
               
               <Badge variant="outline" className="px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] border-primary/20 text-primary bg-primary/5 rounded-full backdrop-blur-sm">
-                Next-Gen Talent Ecosystem
+                Team-Based Hiring Ecosystem
               </Badge>
               
               <h1 className="text-6xl md:text-8xl font-headline font-bold leading-[0.95] tracking-tighter">
+                Assemble. <br />
                 Build. <br />
-                Collaborate. <br />
-                <span className="vibrant-text italic">Get Hired.</span>
+                <span className="vibrant-text italic">Get Hired Together.</span>
               </h1>
               
               <p className="text-xl text-muted-foreground max-w-lg leading-relaxed font-medium">
-                The premier platform connecting ambitious students with high-growth startups. Your career velocity starts here.
+                The premier platform connecting ambitious student teams with high-growth startups. Join a core team and accelerate your collective career.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-5">
-                <Link href="/opportunities">
+                <Link href="/teams">
                   <Button size="lg" className="rounded-full px-10 h-16 text-lg font-bold shadow-2xl shadow-primary/30 group vibrant-gradient border-none transition-transform hover:scale-105">
-                    Explore Roles
+                    Find Your Team
                     <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -67,7 +68,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-bold text-foreground">
-                    Trusted by 2,500+ students
+                    Trusted by 250+ active teams
                   </p>
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5].map((s) => <Star key={s} size={12} className="fill-amber-400 text-amber-400" />)}
@@ -91,9 +92,9 @@ export default function Home() {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-10">
                   <div className="text-white space-y-3">
-                    <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white uppercase tracking-widest text-[10px]">Featured Opening</Badge>
-                    <h3 className="text-3xl font-headline font-bold">Principal Frontend Architect</h3>
-                    <p className="text-white/70 font-medium">NextGen AI Systems • Remote • $120k+</p>
+                    <Badge className="bg-white/20 backdrop-blur-md border-white/30 text-white uppercase tracking-widest text-[10px]">Featured Core Team</Badge>
+                    <h3 className="text-3xl font-headline font-bold">Neural Systems Unit</h3>
+                    <p className="text-white/70 font-medium">NextGen AI Systems • 3/5 Seats Filled</p>
                   </div>
                 </div>
               </div>
@@ -105,8 +106,8 @@ export default function Home() {
                     <Sparkles size={24} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Match Rate</p>
-                    <p className="text-xl font-headline font-bold">98.4% Match</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Team Match Rate</p>
+                    <p className="text-xl font-headline font-bold">98.4% Compatibility</p>
                   </div>
                 </div>
               </div>
@@ -114,47 +115,24 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="bg-white dark:bg-card border-y border-border/40 py-24 px-6 mb-32 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.02)_100%)]"></div>
-          <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 relative z-10">
-            {[
-              { label: "Placements", value: "850+", icon: Target },
-              { label: "Partner Startups", value: "62", icon: Rocket },
-              { label: "App Volume", value: "24k", icon: Users },
-              { label: "Retention Rate", value: "96%", icon: Zap },
-            ].map((stat, i) => (
-              <div key={i} className="text-center space-y-4">
-                <div className="mx-auto w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
-                  <stat.icon size={24} />
-                </div>
-                <div>
-                  <div className="text-5xl font-headline font-bold text-foreground tracking-tighter">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground uppercase font-bold tracking-[0.2em] mt-2">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Advantage Section */}
         <section className="px-6 mb-32 max-w-7xl mx-auto">
           <div className="text-center mb-20 space-y-6">
-            <h2 className="text-5xl font-headline font-bold tracking-tight">The Code-9 <span className="vibrant-text">Difference</span></h2>
+            <h2 className="text-5xl font-headline font-bold tracking-tight">The Code-9 <span className="vibrant-text">Team Edge</span></h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
-              We've engineered a platform that doesn't just list jobs, but accelerates career trajectories through data and community.
+              We've engineered a platform that prioritizes collaborative potential over isolated skills.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { title: "AI-Powered Matching", desc: "Our proprietary neural engine deciphers your true potential and matches you with roles where you'll thrive.", color: "blue", icon: Zap },
-              { title: "High-Growth Network", desc: "Gain exclusive access to Tier-1 startups and venture-backed teams that aren't hiring anywhere else.", color: "purple", icon: Rocket },
-              { title: "Verified Reputation", desc: "Build a persistent career profile with verified skill badges and performance history that recruiters trust.", color: "rose", icon: Star },
+              { title: "Team Synergy Analytics", desc: "Our engine analyzes how your skills complement a team's existing members for perfect balance.", color: "blue", icon: Users },
+              { title: "Collective Placement", desc: "Gain access to startups looking to hire full functional units rather than individual contractors.", color: "purple", icon: Rocket },
+              { title: "Shared Reputation", desc: "Build a persistent team portfolio that showcases your collaborative history and joint project success.", color: "rose", icon: Star },
             ].map((feature, i) => (
               <div key={i} className="bento-card p-10 group hover:-translate-y-3 transition-all duration-500 relative overflow-hidden">
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors"></div>
-                <div className="w-16 h-16 rounded-[24px] bg-muted flex items-center justify-center text-foreground mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500 rotate-3 group-hover:rotate-0">
+                <div className="w-16 h-16 rounded-[24px] bg-muted flex items-center justify-center text-foreground mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500 rotate-3 group-hover:rotate-0 shadow-sm">
                   <feature.icon size={32} />
                 </div>
                 <h3 className="text-2xl font-headline font-bold mb-4">{feature.title}</h3>
@@ -173,14 +151,14 @@ export default function Home() {
             <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-black/10 rounded-full blur-[100px]"></div>
             
             <div className="relative z-10 space-y-10 max-w-3xl mx-auto">
-              <h2 className="text-5xl md:text-7xl font-headline font-bold tracking-tight">Your next chapter starts today.</h2>
+              <h2 className="text-5xl md:text-7xl font-headline font-bold tracking-tight">Your team is waiting.</h2>
               <p className="text-xl text-white/80 max-w-xl mx-auto font-medium leading-relaxed">
-                Join the elite network of students building the future. Your core team seat is waiting.
+                Join the elite network of students building the future. Apply to a Core Team today.
               </p>
               <div className="flex justify-center pt-4">
-                <Link href="/opportunities">
+                <Link href="/teams">
                   <Button size="lg" variant="secondary" className="rounded-full px-16 h-20 text-xl font-bold shadow-2xl bg-white text-primary hover:bg-white/90 transition-all hover:scale-105">
-                    Start Applying
+                    Browse Teams
                   </Button>
                 </Link>
               </div>

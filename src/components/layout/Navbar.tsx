@@ -25,31 +25,30 @@ export function Navbar() {
     )}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold text-xl">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold text-xl shadow-lg shadow-primary/20">
             C9
           </div>
           <span className="font-headline text-xl font-bold tracking-tight hidden sm:block">
-            Code-9 <span className="text-primary">Portal</span>
+            Code-9 <span className="text-primary">Teams</span>
           </span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-8">
-          <Link href="/opportunities" className="text-sm font-medium hover:text-primary transition-colors">Opportunities</Link>
-          <Link href="/showcase" className="text-sm font-medium hover:text-primary transition-colors">Showcase</Link>
-          <Link href="/community" className="text-sm font-medium hover:text-primary transition-colors">Community</Link>
-          <Link href="/about" className="text-sm font-medium hover:text-primary transition-colors">About</Link>
+          <Link href="/teams" className="text-sm font-bold hover:text-primary transition-colors">Join a Team</Link>
+          <Link href="/showcase" className="text-sm font-bold hover:text-primary transition-colors">Showcase</Link>
+          <Link href="/about" className="text-sm font-bold hover:text-primary transition-colors">About</Link>
         </div>
 
         <div className="flex items-center space-x-4">
           <Link href="/auth/login">
-            <Button variant="ghost" className="hidden sm:flex items-center gap-2">
+            <Button variant="ghost" className="hidden sm:flex items-center gap-2 font-bold">
               <LogIn className="w-4 h-4" />
               Sign In
             </Button>
           </Link>
-          <Link href="/opportunities">
-            <Button className="rounded-full px-6 shadow-lg shadow-primary/20">
-              Apply Now
+          <Link href="/teams">
+            <Button className="rounded-full px-6 shadow-lg shadow-primary/20 font-bold vibrant-gradient border-none">
+              Apply for Teams
             </Button>
           </Link>
           <Button variant="ghost" size="icon" className="md:hidden">
