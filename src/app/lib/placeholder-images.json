@@ -1,0 +1,35 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "Abstract tech background",
+      "imageUrl": "https://picsum.photos/seed/code9-hero/1200/600",
+      "imageHint": "modern workspace"
+    },
+    {
+      "id": "student-1",
+      "description": "Professional student portrait",
+      "imageUrl": "https://picsum.photos/seed/student1/400/400",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "student-2",
+      "description": "Professional student portrait",
+      "imageUrl": "https://picsum.photos/seed/student2/400/400",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "student-3",
+      "description": "Professional student portrait",
+      "imageUrl": "https://picsum.photos/seed/student3/400/400",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "student-4",
+      "description": "Professional student portrait",
+      "imageUrl": "https://picsum.photos/seed/student4/400/400",
+      "imageHint": "person portrait"
+    }
+  ]
+}
