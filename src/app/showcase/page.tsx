@@ -1,8 +1,4 @@
-
-"use client";
-
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Calendar, Building2, MapPin, ExternalLink, Github, Linkedin, CheckCircle2 } from "lucide-react";
@@ -156,8 +152,6 @@ export default function ShowcasePage() {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }

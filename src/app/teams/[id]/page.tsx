@@ -1,8 +1,4 @@
-
-"use client";
-
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Sparkles, Briefcase } from "lucide-react";
@@ -87,8 +83,6 @@ export default function CategoryTeamsPage() {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }

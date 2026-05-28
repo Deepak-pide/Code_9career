@@ -1,6 +1,4 @@
-
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Users, Zap, Sparkles, Target, Rocket } from "lucide-react";
 import Link from "next/link";
@@ -166,8 +164,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      
-      <Footer />
     </div>
   );
 }

@@ -1,8 +1,4 @@
-
-"use client";
-
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -94,8 +90,6 @@ export default function TeamsPage() {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }
