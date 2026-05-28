@@ -1,7 +1,9 @@
+"use client";
+
 import { Navbar } from "@/components/layout/Navbar";
 import { OpportunityCard } from "@/components/opportunities/OpportunityCard";
 import { Input } from "@/components/ui/input";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -76,7 +78,7 @@ export default function OpportunitiesPage() {
       
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <header className="mb-12 space-y-4">
+          <header className="mb-12 space-y-4 text-center">
             <h1 className="text-4xl md:text-5xl font-headline font-bold">Find Your Next <span className="text-primary">Opportunity</span></h1>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
               Discover roles that match your skills and ambition. Filter by type, stipend, or tech stack.

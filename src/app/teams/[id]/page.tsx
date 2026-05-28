@@ -1,16 +1,17 @@
+"use client";
+
 import { Navbar } from "@/components/layout/Navbar";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Sparkles, Briefcase } from "lucide-react";
+import { ChevronLeft, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CATEGORIES, SAMPLE_TEAMS } from "@/lib/teams-data";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export default function CategoryTeamsPage() {
   const params = useParams();
-  const categoryId = params.id as string;
+  const categoryId = params?.id as string;
   
   const category = CATEGORIES.find(c => c.id === categoryId);
   const teams = SAMPLE_TEAMS.filter(t => t.category === categoryId);
