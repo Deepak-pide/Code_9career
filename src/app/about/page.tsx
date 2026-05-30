@@ -5,9 +5,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Target, Rocket, ShieldCheck, Zap, Globe, Sparkles } from "lucide-react";
+import { Rocket, ShieldCheck, Zap, Globe, Sparkles } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function AboutPage() {
   return (
@@ -29,19 +28,9 @@ export default function AboutPage() {
             </p>
           </header>
 
-          {/* Mission & Values Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-32">
-            <div className="bento-card p-12 bg-primary text-white space-y-8 flex flex-col justify-center">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
-                <Target size={32} />
-              </div>
-              <h2 className="text-4xl font-headline font-bold">Our Mission</h2>
-              <p className="text-xl text-primary-foreground/90 leading-relaxed font-medium">
-                To bridge the gap between academic learning and industry impact by fostering a "squad-first" ecosystem. We believe that when students build together, they achieve results far beyond individual capability.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Values Grid */}
+          <div className="mb-32">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { icon: Zap, title: "Velocity", desc: "Rapid deployment of skill-matched core teams." },
                 { icon: ShieldCheck, title: "Trust", desc: "Vetted talent pipelines with proven synergy." },
