@@ -1,77 +1,30 @@
+
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { OpportunityCard } from "@/components/opportunities/OpportunityCard";
 import { Input } from "@/components/ui/input";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Footer } from "@/components/layout/Footer";
-
-const SAMPLE_OPPORTUNITIES = [
-  {
-    title: "Frontend Developer",
-    company: "Code-9 Studio",
-    description: "Building modern user interfaces with React and Tailwind CSS. Looking for someone with a passion for UX.",
-    type: "Remote" as const,
-    stipend: "$1,200/mo",
-    skills: ["React", "Next.js", "Tailwind"],
-    theme: "blue" as const
-  },
-  {
-    title: "UI/UX Designer",
-    company: "Creative Labs",
-    description: "Designing beautiful, intuitive interfaces for our upcoming SaaS product launch.",
-    type: "Hybrid" as const,
-    stipend: "$1,500/mo",
-    skills: ["Figma", "Prototyping", "UX Research"],
-    theme: "pink" as const
-  },
-  {
-    title: "Backend Engineer",
-    company: "DataStream",
-    description: "Architecting robust APIs and database schemas for high-traffic applications.",
-    type: "Remote" as const,
-    stipend: "$2,000/mo",
-    skills: ["Node.js", "PostgreSQL", "Redis"],
-    theme: "purple" as const
-  },
-  {
-    title: "AI/ML Intern",
-    company: "NeuroTech",
-    description: "Working on cutting-edge LLM integrations and data preprocessing for our core models.",
-    type: "On-site" as const,
-    stipend: "Unpaid",
-    skills: ["Python", "PyTorch", "OpenAI"],
-    theme: "green" as const
-  },
-  {
-    title: "Content Writer",
-    company: "TechBrief",
-    description: "Crafting engaging articles and documentation for a global developer community.",
-    type: "Remote" as const,
-    stipend: "$800/mo",
-    skills: ["Writing", "SEO", "Tech Knowledge"],
-    theme: "amber" as const
-  },
-  {
-    title: "Video Editor",
-    company: "FrameFlow",
-    description: "Creating high-impact video content for social media and marketing campaigns.",
-    type: "Hybrid" as const,
-    stipend: "$1,000/mo",
-    skills: ["Premiere Pro", "After Effects"],
-    theme: "cyan" as const
-  }
-];
+import { useFirestore, useCollection } from "@/firebase";
+import { collection } from "firebase/firestore";
 
 export default function OpportunitiesPage() {
   const [search, setSearch] = useState("");
+  const db = useFirestore();
 
-  const filtered = SAMPLE_OPPORTUNITIES.filter(op => 
-    op.title.toLowerCase().includes(search.toLowerCase()) || 
-    op.company.toLowerCase().includes(search.toLowerCase())
-  );
+  const teamsQuery = useMemo(() => db ? collection(db, "teams") : null, [db]);
+  const { data: teams, loading } = useCollection(teamsQuery);
+
+  const filtered = useMemo(() => {
+    if (!teams) return [];
+    return teams.filter(op => 
+      op.name.toLowerCase().includes(search.toLowerCase()) || 
+      op.company.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [teams, search]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -101,16 +54,26 @@ export default function OpportunitiesPage() {
                 <SlidersHorizontal size={20} />
                 Filters
               </Button>
-              <Button className="h-14 rounded-2xl px-6 shadow-lg shadow-primary/20">
-                Search
-              </Button>
             </div>
           </div>
 
-          {filtered.length > 0 ? (
+          {loading ? (
+            <div className="flex justify-center py-24">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filtered.map((op, idx) => (
-                <OpportunityCard key={idx} {...op} />
+              {filtered.map((op: any) => (
+                <OpportunityCard 
+                  key={op._id} 
+                  title={op.name}
+                  company={op.company}
+                  description={op.description}
+                  type="Remote" // Defaulting for MVP as it's not in schema yet
+                  stipend={op.stipend}
+                  skills={op.skills || []}
+                  theme={op.theme || 'blue'}
+                />
               ))}
             </div>
           ) : (

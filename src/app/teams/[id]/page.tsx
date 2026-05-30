@@ -1,21 +1,46 @@
+
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Briefcase } from "lucide-react";
+import { ChevronLeft, Briefcase, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { CATEGORIES, SAMPLE_TEAMS } from "@/lib/teams-data";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/layout/Footer";
+import { useFirestore, useCollection, useDoc } from "@/firebase";
+import { collection, query, where, doc } from "firebase/firestore";
+import { useMemo } from "react";
 
 export default function CategoryTeamsPage() {
   const params = useParams();
   const categoryId = params?.id as string;
+  const db = useFirestore();
+
+  // Fetch the specific category details from the specialization ID (slug)
+  const specRef = useMemo(() => {
+    if (!db || !categoryId) return null;
+    return doc(db, "specializations", categoryId);
+  }, [db, categoryId]);
   
-  const category = CATEGORIES.find(c => c.id === categoryId);
-  const teams = SAMPLE_TEAMS.filter(t => t.category === categoryId);
+  const { data: category, loading: catLoading } = useDoc(specRef);
+
+  // Fetch teams filtered by this category
+  const teamsQuery = useMemo(() => {
+    if (!db || !categoryId) return null;
+    return query(collection(db, "teams"), where("categoryId", "==", categoryId));
+  }, [db, categoryId]);
+
+  const { data: teams, loading: teamsLoading } = useCollection(teamsQuery);
+
+  if (catLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!category) {
     return (
@@ -28,15 +53,12 @@ export default function CategoryTeamsPage() {
     );
   }
 
-  const Icon = category.icon;
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Refined Header Section */}
           <div className="mb-20 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
             <div className="space-y-6 flex-1">
               <Link href="/teams">
@@ -57,7 +79,7 @@ export default function CategoryTeamsPage() {
                     category.color === 'cyan' && "bg-cyan-500 shadow-cyan-500/20",
                     category.color === 'indigo' && "bg-indigo-500 shadow-indigo-500/20",
                   )}>
-                    <Icon size={32} />
+                    <Briefcase size={32} />
                   </div>
                   <h1 className="text-5xl md:text-7xl font-headline font-bold tracking-tighter leading-none">
                     {category.label} <span className="text-muted-foreground/20 italic">Units</span>
@@ -68,18 +90,16 @@ export default function CategoryTeamsPage() {
                 </p>
               </div>
             </div>
-            
-            <div className="shrink-0 w-full md:w-auto">
-              <Button size="lg" className="w-full md:w-auto rounded-[24px] px-10 h-16 text-lg font-bold vibrant-gradient border-none shadow-2xl shadow-primary/30 hover:scale-105 transition-all active:scale-95">
-                Apply for this Specialization
-              </Button>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {teams.length > 0 ? (
-              teams.map((team, idx) => (
-                <TeamCard key={idx} {...team} />
+            {teamsLoading ? (
+               <div className="col-span-full flex justify-center py-12">
+                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+               </div>
+            ) : teams && teams.length > 0 ? (
+              teams.map((team: any) => (
+                <TeamCard key={team._id} {...team} />
               ))
             ) : (
               <div className="col-span-full py-32 text-center bento-card border-2 border-dashed bg-muted/5 group">
@@ -88,7 +108,7 @@ export default function CategoryTeamsPage() {
                 </div>
                 <h3 className="text-3xl font-headline font-bold text-muted-foreground">No active squads right now</h3>
                 <p className="text-muted-foreground mt-3 max-w-sm mx-auto text-lg">
-                  Submit a general application above to be the first to know when new units form.
+                  New units form every week. Keep an eye on this space!
                 </p>
               </div>
             )}
