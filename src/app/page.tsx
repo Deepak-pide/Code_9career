@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Users, Zap, Sparkles, Target, Rocket } from "lucide-react";
+import { ArrowRight, Star, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -14,18 +14,14 @@ export default function Home() {
     <div className="min-h-screen flex flex-col selection:bg-primary selection:text-white">
       <Navbar />
       
-      <main className="flex-grow pt-32 overflow-hidden">
+      <main className="flex-grow pt-24 overflow-hidden">
         {/* Hero Section */}
-        <section className="px-6 mb-32 relative">
+        <section className="px-6 mb-12 relative">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-gradient-to-b from-primary/5 via-transparent to-transparent -z-20"></div>
           
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-10 relative">
               <div className="absolute -left-20 -top-20 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -z-10 animate-pulse"></div>
-              
-              <Badge variant="outline" className="px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] border-primary/20 text-primary bg-primary/5 rounded-full backdrop-blur-sm">
-                Team-Based Hiring Ecosystem
-              </Badge>
               
               <h1 className="text-6xl md:text-8xl font-headline font-bold leading-[0.95] tracking-tighter">
                 Assemble. <br />
@@ -51,7 +47,7 @@ export default function Home() {
                 </Link>
               </div>
               
-              <div className="flex items-center space-x-6 pt-4">
+              <div className="flex items-center space-x-6 pt-2">
                 <div className="flex -space-x-4">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="w-12 h-12 rounded-full border-4 border-background overflow-hidden bg-muted shadow-lg">
@@ -114,38 +110,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Advantage Section */}
-        <section className="px-6 mb-32 max-w-7xl mx-auto">
-          <div className="text-center mb-20 space-y-6">
-            <h2 className="text-5xl font-headline font-bold tracking-tight">The Code-9 <span className="vibrant-text">Team Edge</span></h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
-              We've engineered a platform that prioritizes collaborative potential over isolated skills.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { title: "Team Synergy Analytics", desc: "Our engine analyzes how your skills complement a team's existing members for perfect balance.", color: "blue", icon: Users },
-              { title: "Collective Placement", desc: "Gain access to startups looking to hire full functional units rather than individual contractors.", color: "purple", icon: Rocket },
-              { title: "Shared Reputation", desc: "Build a persistent team portfolio that showcases your collaborative history and joint project success.", color: "rose", icon: Star },
-            ].map((feature, i) => (
-              <div key={i} className="bento-card p-10 group hover:-translate-y-3 transition-all duration-500 relative overflow-hidden">
-                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors"></div>
-                <div className="w-16 h-16 rounded-[24px] bg-muted flex items-center justify-center text-foreground mb-8 group-hover:bg-primary group-hover:text-white transition-all duration-500 rotate-3 group-hover:rotate-0 shadow-sm">
-                  <feature.icon size={32} />
-                </div>
-                <h3 className="text-2xl font-headline font-bold mb-4">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed font-medium">
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* CTA Section */}
-        <section className="px-6 mb-32">
-          <div className="max-w-7xl mx-auto vibrant-gradient rounded-[48px] p-16 md:p-32 text-center text-white relative shadow-[0_48px_96px_rgba(79,70,229,0.3)] overflow-hidden">
+        <section className="px-6 mb-24">
+          <div className="max-w-7xl mx-auto vibrant-gradient rounded-[48px] p-16 md:p-24 text-center text-white relative shadow-[0_48px_96px_rgba(79,70,229,0.3)] overflow-hidden">
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-white/10 rounded-full blur-[120px]"></div>
             <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-black/10 rounded-full blur-[100px]"></div>
             
