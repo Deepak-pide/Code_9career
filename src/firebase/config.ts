@@ -1,6 +1,5 @@
-
 /**
- * @fileOverview Firebase configuration and initialization.
+ * @fileOverview Firebase configuration.
  */
 export const firebaseConfig = {
   apiKey: "mock-api-key",
