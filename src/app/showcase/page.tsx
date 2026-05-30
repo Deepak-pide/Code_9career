@@ -86,17 +86,6 @@ export default function ShowcasePage() {
                       data-ai-hint="person portrait"
                     />
                   )}
-                  <div className="absolute top-5 right-5 z-10">
-                    <Badge className={cn(
-                      "rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest shadow-lg border-none flex items-center gap-1.5",
-                      student.status.includes('Hired') && "bg-emerald-500 text-white",
-                      student.status.includes('Core') && "bg-primary text-white",
-                      student.status.includes('Active') && "bg-blue-500 text-white",
-                    )}>
-                      <Trophy size={10} />
-                      {student.status}
-                    </Badge>
-                  </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
                     <div className="flex items-center gap-2 mb-1">
                       <Sparkles className="h-4 w-4 text-primary" />
