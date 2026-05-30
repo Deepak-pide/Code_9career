@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { User, LogIn, Menu } from "lucide-react";
+import { LogIn, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +36,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center space-x-8">
           <Link href="/teams" className="text-sm font-bold hover:text-primary transition-colors">Join a Team</Link>
           <Link href="/showcase" className="text-sm font-bold hover:text-primary transition-colors">Showcase</Link>
+          <Link href="/services" className="text-sm font-bold hover:text-primary transition-colors">Services</Link>
           <Link href="/about" className="text-sm font-bold hover:text-primary transition-colors">About</Link>
         </div>
 
