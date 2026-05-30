@@ -1,0 +1,62 @@
+
+{
+  "entities": {
+    "Specialization": {
+      "title": "Specialization",
+      "description": "A category of expertise for teams (e.g., Web Dev, UI/UX).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string", "description": "Lucide icon name" },
+        "color": { "type": "string", "enum": ["blue", "pink", "purple", "amber", "rose", "cyan", "indigo"] }
+      },
+      "required": ["id", "label", "description", "icon", "color"]
+    },
+    "TeamRequest": {
+      "title": "Team Request",
+      "description": "A request from a student to join a specific team.",
+      "type": "object",
+      "properties": {
+        "teamName": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "accepted", "rejected"] },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["teamName", "userName", "userEmail", "status", "timestamp"]
+    },
+    "Enquiry": {
+      "title": "Enquiry",
+      "description": "A business enquiry from the services page.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "service": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["name", "email", "service", "message", "timestamp"]
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/specializations/{specializationId}": {
+      "schema": "Specialization",
+      "description": "Available team categories."
+    },
+    "/requests/{requestId}": {
+      "schema": "TeamRequest",
+      "description": "Student applications for teams."
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "Enquiry",
+      "description": "Service enquiries from potential clients."
+    }
+  }
+}
