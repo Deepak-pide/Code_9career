@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Footer } from "@/components/layout/Footer";
 
 const SAMPLE_OPPORTUNITIES = [
   {
@@ -124,6 +125,7 @@ export default function OpportunitiesPage() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

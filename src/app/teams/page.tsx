@@ -8,6 +8,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/teams-data";
+import { Footer } from "@/components/layout/Footer";
 
 export default function TeamsPage() {
   const [search, setSearch] = useState("");
@@ -92,6 +93,7 @@ export default function TeamsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

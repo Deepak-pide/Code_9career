@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -9,6 +8,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CATEGORIES, SAMPLE_TEAMS } from "@/lib/teams-data";
 import { cn } from "@/lib/utils";
+import { Footer } from "@/components/layout/Footer";
 
 export default function CategoryTeamsPage() {
   const params = useParams();
@@ -95,6 +95,7 @@ export default function CategoryTeamsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
