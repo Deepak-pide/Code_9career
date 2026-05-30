@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -11,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Settings, LogOut, Sparkles } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Settings, LogOut, Sparkles, Database, Users, Inbox } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -28,10 +29,10 @@ export default function AdminConsole() {
   const requestsQuery = useMemo(() => db ? collection(db, "requests") : null, [db]);
   const enquiriesQuery = useMemo(() => db ? collection(db, "enquiries") : null, [db]);
 
-  const { data: specializations } = useCollection(specializationsQuery);
-  const { data: teams } = useCollection(teamsQuery);
-  const { data: requests } = useCollection(requestsQuery);
-  const { data: enquiries } = useCollection(enquiriesQuery);
+  const { data: specializations, loading: specsLoading } = useCollection(specializationsQuery);
+  const { data: teams, loading: teamsLoading } = useCollection(teamsQuery);
+  const { data: requests, loading: requestsLoading } = useCollection(requestsQuery);
+  const { data: enquiries, loading: enquiriesLoading } = useCollection(enquiriesQuery);
 
   const [newSpec, setNewSpec] = useState({ label: "", description: "", icon: "Code", imageUrl: "", color: "blue" });
   const [newTeam, setNewTeam] = useState({ name: "", company: "", description: "", categoryId: "", seats: "1/3", stipend: "$1,500/mo", skills: "", theme: "blue" });
@@ -174,6 +175,11 @@ export default function AdminConsole() {
                       <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDeleteDoc('specializations', spec._id)}><Trash2 size={16} /></Button>
                     </Card>
                   ))}
+                  {!specsLoading && specializations?.length === 0 && (
+                    <div className="col-span-full py-20 text-center border-2 border-dashed rounded-3xl text-muted-foreground">
+                      No categories found. Add your first specialization above.
+                    </div>
+                  )}
                 </div>
               </TabsContent>
 
@@ -197,34 +203,48 @@ export default function AdminConsole() {
                       <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDeleteDoc('teams', team._id)}><Trash2 size={16} /></Button>
                     </Card>
                   ))}
+                  {!teamsLoading && teams?.length === 0 && (
+                    <div className="py-20 text-center border-2 border-dashed rounded-3xl text-muted-foreground">
+                      No teams created yet.
+                    </div>
+                  )}
                 </div>
               </TabsContent>
 
               <TabsContent value="requests">
-                <Card className="bento-card overflow-hidden">
-                  <Table>
-                    <TableHeader className="bg-muted/30">
-                      <TableRow>
-                        <TableHead>Applicant</TableHead>
-                        <TableHead>Team</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {requests?.map((req: any) => (
-                        <TableRow key={req._id}>
-                          <TableCell><div className="font-bold">{req.userName}</div><div className="text-xs">{req.userEmail}</div></TableCell>
-                          <TableCell>{req.teamName}</TableCell>
-                          <TableCell><Badge variant={req.status === 'accepted' ? 'default' : 'secondary'}>{req.status}</Badge></TableCell>
-                          <TableCell className="text-right space-x-2">
-                            <Button size="sm" variant="ghost" className="text-green-600" onClick={() => handleUpdateStatus('requests', req._id, 'accepted')}><CheckCircle2 size={18} /></Button>
-                            <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleUpdateStatus('requests', req._id, 'rejected')}><XCircle size={18} /></Button>
-                          </TableCell>
+                <Card className="bento-card overflow-hidden min-h-[300px]">
+                  {requestsLoading ? (
+                    <div className="p-20 flex justify-center"><Sparkles className="animate-pulse text-primary h-10 w-10" /></div>
+                  ) : requests && requests.length > 0 ? (
+                    <Table>
+                      <TableHeader className="bg-muted/30">
+                        <TableRow>
+                          <TableHead>Applicant</TableHead>
+                          <TableHead>Team</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Action</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {requests.map((req: any) => (
+                          <TableRow key={req._id}>
+                            <TableCell><div className="font-bold">{req.userName}</div><div className="text-xs">{req.userEmail}</div></TableCell>
+                            <TableCell>{req.teamName}</TableCell>
+                            <TableCell><Badge variant={req.status === 'accepted' ? 'default' : 'secondary'}>{req.status}</Badge></TableCell>
+                            <TableCell className="text-right space-x-2">
+                              <Button size="sm" variant="ghost" className="text-green-600" onClick={() => handleUpdateStatus('requests', req._id, 'accepted')}><CheckCircle2 size={18} /></Button>
+                              <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleUpdateStatus('requests', req._id, 'rejected')}><XCircle size={18} /></Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <div className="p-20 text-center space-y-4">
+                      <Inbox className="mx-auto text-muted-foreground/30 h-12 w-12" />
+                      <p className="text-muted-foreground">No student requests found.</p>
+                    </div>
+                  )}
                 </Card>
               </TabsContent>
 
@@ -238,6 +258,11 @@ export default function AdminConsole() {
                       <Button variant="ghost" size="sm" className="text-destructive w-full" onClick={() => handleDeleteDoc('enquiries', enq._id)}>Archive Enquiry</Button>
                     </Card>
                   ))}
+                  {!enquiriesLoading && enquiries?.length === 0 && (
+                    <div className="col-span-full py-20 text-center border-2 border-dashed rounded-3xl text-muted-foreground">
+                      No service enquiries found.
+                    </div>
+                  )}
                 </div>
               </TabsContent>
             </Tabs>

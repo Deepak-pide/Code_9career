@@ -1,7 +1,8 @@
+
 "use client";
 
 import { SidebarProvider, SidebarInset, SidebarTrigger, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { FileText, Briefcase, BarChart3, Users, Settings, LogOut, Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { FileText, Briefcase, BarChart3, Users, Settings, LogOut, Sparkles, CheckCircle2, XCircle, Loader2, Inbox } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
@@ -92,10 +93,10 @@ export default function ApplicationsPage() {
               </Badge>
             </div>
 
-            <div className="bento-card border-none shadow-sm overflow-hidden bg-white">
+            <div className="bento-card border-none shadow-sm overflow-hidden bg-white min-h-[400px]">
               {requestsLoading ? (
-                <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary h-8 w-8" /></div>
-              ) : (
+                <div className="p-12 flex justify-center items-center h-full"><Loader2 className="animate-spin text-primary h-8 w-8" /></div>
+              ) : applications && applications.length > 0 ? (
                 <Table>
                   <TableHeader className="bg-muted/30">
                     <TableRow>
@@ -106,7 +107,7 @@ export default function ApplicationsPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {applications?.map((app: any) => (
+                    {applications.map((app: any) => (
                       <TableRow key={app._id} className="hover:bg-muted/10 transition-colors">
                         <TableCell>
                           <div className="font-bold">{app.userName}</div>
@@ -140,6 +141,14 @@ export default function ApplicationsPage() {
                     ))}
                   </TableBody>
                 </Table>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-20 text-center space-y-4">
+                  <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center text-muted-foreground/30">
+                    <Inbox size={32} />
+                  </div>
+                  <h3 className="text-xl font-headline font-bold">No applications yet</h3>
+                  <p className="text-muted-foreground max-w-xs mx-auto">Incoming requests from students will appear here for your review.</p>
+                </div>
               )}
             </div>
           </main>

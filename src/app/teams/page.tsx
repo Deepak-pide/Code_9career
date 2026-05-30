@@ -3,7 +3,7 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowRight, Loader2, Code, Layout, Play, Image as ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal } from "lucide-react";
+import { Search, ArrowRight, Loader2, Code, Layout, Play, Image as ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal, Ghost } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
@@ -61,7 +61,7 @@ export default function TeamsPage() {
             <div className="flex justify-center py-20">
               <Loader2 className="h-10 w-10 text-primary animate-spin" />
             </div>
-          ) : (
+          ) : filteredCategories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCategories.map((cat: any) => {
                 const Icon = ICON_MAP[cat.icon] || Layout;
@@ -120,6 +120,15 @@ export default function TeamsPage() {
                   </Link>
                 );
               })}
+            </div>
+          ) : (
+            <div className="text-center py-32 space-y-6 bento-card bg-muted/5 border-dashed border-2">
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto">
+                <Ghost className="h-10 w-10 text-muted-foreground/40" />
+              </div>
+              <h2 className="text-3xl font-headline font-bold text-muted-foreground">No specializations found</h2>
+              <p className="text-muted-foreground max-w-sm mx-auto">We're still setting up our talent pools. Check back soon for new opportunities!</p>
+              <Button variant="outline" className="rounded-full" onClick={() => setSearch("")}>Clear Search</Button>
             </div>
           )}
         </div>
