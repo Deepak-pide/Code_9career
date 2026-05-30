@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -6,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SERVICES } from "@/lib/services-data";
 import { cn } from "@/lib/utils";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Phone, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Footer } from "@/components/layout/Footer";
 
 export default function ServicesPage() {
   const handleEnquire = (serviceName: string) => {
@@ -89,13 +89,36 @@ export default function ServicesPage() {
           {/* Bottom CTA */}
           <div className="mt-32 p-16 md:p-24 rounded-[64px] bg-muted/30 border border-muted text-center space-y-10 relative overflow-hidden">
              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
-             <div className="relative z-10 space-y-6">
+             <div className="relative z-10 space-y-8">
                 <h2 className="text-4xl md:text-6xl font-headline font-bold tracking-tight italic">Need something more custom?</h2>
                 <p className="text-xl text-muted-foreground max-w-xl mx-auto font-medium">
                   We offer bespoke talent partnership agreements for enterprise partners looking for dedicated engineering pipelines.
                 </p>
+                
+                <div className="flex flex-col md:flex-row items-center justify-center gap-8 pt-4">
+                  <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm px-8 py-4 rounded-3xl border shadow-sm">
+                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white">
+                      <Phone size={24} />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Call Us</p>
+                      <a href="tel:9179349919" className="text-lg font-bold hover:text-primary transition-colors">917-934-9919</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm px-8 py-4 rounded-3xl border shadow-sm">
+                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white">
+                      <Mail size={24} />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Email Us</p>
+                      <a href="mailto:codenine0504@gmail.com" className="text-lg font-bold hover:text-primary transition-colors">codenine0504@gmail.com</a>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="pt-6">
-                  <Button size="lg" variant="outline" className="h-16 px-12 rounded-full font-bold text-xl border-2">
+                  <Button size="lg" variant="outline" className="h-16 px-12 rounded-full font-bold text-xl border-2 hover:bg-white transition-all shadow-lg">
                     Book a Strategy Call
                   </Button>
                 </div>
@@ -103,6 +126,7 @@ export default function ServicesPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
