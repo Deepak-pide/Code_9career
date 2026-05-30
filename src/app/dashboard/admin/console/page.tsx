@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Briefcase, Users, Settings, LogOut } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Briefcase, Users, Settings, LogOut, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 
@@ -24,14 +24,17 @@ export default function AdminConsole() {
 
   // Firestore Collections
   const specializationsQuery = useMemo(() => db ? collection(db, "specializations") : null, [db]);
+  const teamsQuery = useMemo(() => db ? collection(db, "teams") : null, [db]);
   const requestsQuery = useMemo(() => db ? collection(db, "requests") : null, [db]);
   const enquiriesQuery = useMemo(() => db ? collection(db, "enquiries") : null, [db]);
 
   const { data: specializations } = useCollection(specializationsQuery);
+  const { data: teams } = useCollection(teamsQuery);
   const { data: requests } = useCollection(requestsQuery);
   const { data: enquiries } = useCollection(enquiriesQuery);
 
   const [newSpec, setNewSpec] = useState({ label: "", description: "", icon: "Code", color: "blue" });
+  const [newTeam, setNewTeam] = useState({ name: "", company: "", description: "", categoryId: "", seats: "1/5", stipend: "$1,500/mo", skills: "", theme: "blue" });
 
   if (!user || user.email !== ADMIN_EMAIL) {
     return (
@@ -58,9 +61,23 @@ export default function AdminConsole() {
       });
   };
 
-  const handleDeleteSpecialization = (docId: string) => {
+  const handleAddTeam = () => {
     if (!db) return;
-    deleteDoc(doc(db, "specializations", docId));
+    const teamData = {
+      ...newTeam,
+      skills: newTeam.skills.split(",").map(s => s.trim()),
+      timestamp: Date.now()
+    };
+    addDoc(collection(db, "teams"), teamData)
+      .then(() => {
+        toast({ title: "Success", description: "Team squad created." });
+        setNewTeam({ name: "", company: "", description: "", categoryId: "", seats: "1/5", stipend: "$1,500/mo", skills: "", theme: "blue" });
+      });
+  };
+
+  const handleDeleteDoc = (coll: string, docId: string) => {
+    if (!db) return;
+    deleteDoc(doc(db, coll, docId)).then(() => toast({ title: "Deleted", description: "Record removed." }));
   };
 
   const handleUpdateStatus = (coll: string, docId: string, status: string) => {
@@ -102,53 +119,57 @@ export default function AdminConsole() {
           <main className="flex-1 p-8 overflow-y-auto">
             <Tabs defaultValue="specializations" className="space-y-8">
               <TabsList className="bg-white border p-1 rounded-2xl h-14">
-                <TabsTrigger value="specializations" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                  <Layout className="w-4 h-4 mr-2" /> Specializations
+                <TabsTrigger value="specializations" className="rounded-xl px-6 h-12 data-[state=active]:bg-primary data-[state=active]:text-white">
+                  <Layout className="w-4 h-4 mr-2" /> Categories
                 </TabsTrigger>
-                <TabsTrigger value="requests" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                  <Users className="w-4 h-4 mr-2" /> Team Requests
+                <TabsTrigger value="teams" className="rounded-xl px-6 h-12 data-[state=active]:bg-primary data-[state=active]:text-white">
+                  <Sparkles className="w-4 h-4 mr-2" /> Active Teams
                 </TabsTrigger>
-                <TabsTrigger value="enquiries" className="rounded-xl px-8 h-12 data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                  <MessageSquare className="w-4 h-4 mr-2" /> Service Enquiries
+                <TabsTrigger value="requests" className="rounded-xl px-6 h-12 data-[state=active]:bg-primary data-[state=active]:text-white">
+                  <Users className="w-4 h-4 mr-2" /> Requests
+                </TabsTrigger>
+                <TabsTrigger value="enquiries" className="rounded-xl px-6 h-12 data-[state=active]:bg-primary data-[state=active]:text-white">
+                  <MessageSquare className="w-4 h-4 mr-2" /> Enquiries
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="specializations" className="space-y-6">
                 <Card className="bento-card border-none shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-2xl font-headline font-bold">Add New Specialization</CardTitle>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-                    <div className="space-y-2">
-                      <Label>Label</Label>
-                      <Input placeholder="e.g. AI Specialist" value={newSpec.label} onChange={e => setNewSpec({ ...newSpec, label: e.target.value })} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Icon Name</Label>
-                      <Input placeholder="e.g. Brain" value={newSpec.icon} onChange={e => setNewSpec({ ...newSpec, icon: e.target.value })} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Description</Label>
-                      <Input placeholder="Brief overview..." value={newSpec.description} onChange={e => setNewSpec({ ...newSpec, description: e.target.value })} />
-                    </div>
-                    <Button onClick={handleAddSpecialization} className="rounded-xl h-10 vibrant-gradient border-none font-bold">
-                      <Plus className="w-4 h-4 mr-2" /> Add Category
-                    </Button>
+                  <CardHeader><CardTitle>Add Specialization</CardTitle></CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="space-y-2"><Label>Label</Label><Input value={newSpec.label} onChange={e => setNewSpec({ ...newSpec, label: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Icon</Label><Input value={newSpec.icon} onChange={e => setNewSpec({ ...newSpec, icon: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Description</Label><Input value={newSpec.description} onChange={e => setNewSpec({ ...newSpec, description: e.target.value })} /></div>
+                    <Button onClick={handleAddSpecialization} className="mt-auto rounded-xl">Add</Button>
                   </CardContent>
                 </Card>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {specializations?.map((spec: any) => (
-                    <Card key={spec._id} className="bento-card border-none p-6 group">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-2">
-                          <h3 className="font-bold text-xl">{spec.label}</h3>
-                          <p className="text-sm text-muted-foreground italic leading-relaxed">"{spec.description}"</p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDeleteSpecialization(spec._id)}>
-                          <Trash2 size={18} />
-                        </Button>
-                      </div>
+                    <Card key={spec._id} className="bento-card p-6 flex justify-between">
+                      <div><h4 className="font-bold">{spec.label}</h4><p className="text-xs text-muted-foreground">{spec.description}</p></div>
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteDoc('specializations', spec._id)}><Trash2 size={16} /></Button>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="teams" className="space-y-6">
+                <Card className="bento-card border-none shadow-sm">
+                  <CardHeader><CardTitle>Form New Core Team Squad</CardTitle></CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2"><Label>Team Name</Label><Input value={newTeam.name} onChange={e => setNewTeam({ ...newTeam, name: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Company</Label><Input value={newTeam.company} onChange={e => setNewTeam({ ...newTeam, company: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Category ID</Label><Input placeholder="e.g. web, uiux" value={newTeam.categoryId} onChange={e => setNewTeam({ ...newTeam, categoryId: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Skills (comma separated)</Label><Input value={newTeam.skills} onChange={e => setNewTeam({ ...newTeam, skills: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Stipend</Label><Input value={newTeam.stipend} onChange={e => setNewTeam({ ...newTeam, stipend: e.target.value })} /></div>
+                    <Button onClick={handleAddTeam} className="mt-auto rounded-xl">Launch Team</Button>
+                  </CardContent>
+                </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {teams?.map((team: any) => (
+                    <Card key={team._id} className="bento-card p-6 flex justify-between">
+                      <div><h4 className="font-bold">{team.name}</h4><p className="text-xs text-muted-foreground">{team.company} • {team.categoryId}</p></div>
+                      <Button variant="ghost" size="icon" onClick={() => handleDeleteDoc('teams', team._id)}><Trash2 size={16} /></Button>
                     </Card>
                   ))}
                 </div>
@@ -159,32 +180,21 @@ export default function AdminConsole() {
                   <Table>
                     <TableHeader className="bg-muted/30">
                       <TableRow>
-                        <TableHead className="font-bold">Applicant</TableHead>
-                        <TableHead className="font-bold">Team</TableHead>
-                        <TableHead className="font-bold">Status</TableHead>
-                        <TableHead className="font-bold text-right">Action</TableHead>
+                        <TableHead>Applicant</TableHead>
+                        <TableHead>Team</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Action</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {requests?.map((req: any) => (
                         <TableRow key={req._id}>
-                          <TableCell>
-                            <div className="font-bold">{req.userName}</div>
-                            <div className="text-xs text-muted-foreground">{req.userEmail}</div>
-                          </TableCell>
-                          <TableCell className="font-medium">{req.teamName}</TableCell>
-                          <TableCell>
-                            <Badge variant={req.status === 'accepted' ? 'default' : 'secondary'} className="rounded-full">
-                              {req.status}
-                            </Badge>
-                          </TableCell>
+                          <TableCell><div className="font-bold">{req.userName}</div><div className="text-xs">{req.userEmail}</div></TableCell>
+                          <TableCell>{req.teamName}</TableCell>
+                          <TableCell><Badge variant={req.status === 'accepted' ? 'default' : 'secondary'}>{req.status}</Badge></TableCell>
                           <TableCell className="text-right space-x-2">
-                            <Button size="sm" variant="ghost" className="text-green-600 h-8 w-8 p-0" onClick={() => handleUpdateStatus('requests', req._id, 'accepted')}>
-                              <CheckCircle2 size={18} />
-                            </Button>
-                            <Button size="sm" variant="ghost" className="text-red-600 h-8 w-8 p-0" onClick={() => handleUpdateStatus('requests', req._id, 'rejected')}>
-                              <XCircle size={18} />
-                            </Button>
+                            <Button size="sm" variant="ghost" className="text-green-600" onClick={() => handleUpdateStatus('requests', req._id, 'accepted')}><CheckCircle2 size={18} /></Button>
+                            <Button size="sm" variant="ghost" className="text-red-600" onClick={() => handleUpdateStatus('requests', req._id, 'rejected')}><XCircle size={18} /></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -196,18 +206,9 @@ export default function AdminConsole() {
               <TabsContent value="enquiries">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {enquiries?.map((enq: any) => (
-                    <Card key={enq._id} className="bento-card border-none p-8 space-y-6">
-                      <div className="flex justify-between items-center">
-                        <Badge className="bg-primary/10 text-primary border-none">{enq.service}</Badge>
-                        <span className="text-xs text-muted-foreground font-bold">{new Date(enq.timestamp).toLocaleDateString()}</span>
-                      </div>
-                      <div className="space-y-2">
-                        <h4 className="font-bold text-lg">{enq.name}</h4>
-                        <div className="flex gap-4 text-xs font-medium text-muted-foreground">
-                          <span>{enq.email}</span>
-                          <span>{enq.phone}</span>
-                        </div>
-                      </div>
+                    <Card key={enq._id} className="bento-card p-8 space-y-4">
+                      <div className="flex justify-between"><Badge>{enq.service}</Badge><span className="text-xs text-muted-foreground">{new Date(enq.timestamp).toLocaleDateString()}</span></div>
+                      <div><h4 className="font-bold">{enq.name}</h4><p className="text-xs">{enq.email} • {enq.phone}</p></div>
                       <p className="bg-muted/30 p-4 rounded-xl text-sm italic border">"{enq.message}"</p>
                     </Card>
                   ))}

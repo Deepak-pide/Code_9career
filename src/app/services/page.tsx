@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -9,6 +10,10 @@ import { ArrowRight, CheckCircle2, Phone, Mail, User, Send } from "lucide-react"
 import { toast } from "@/hooks/use-toast";
 import { Footer } from "@/components/layout/Footer";
 import { useState } from "react";
+import { useFirestore } from "@/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 import {
   Dialog,
   DialogContent,
@@ -50,6 +55,7 @@ type EnquiryFormValues = z.infer<typeof enquiryFormSchema>;
 export default function ServicesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<string>("");
+  const db = useFirestore();
 
   const form = useForm<EnquiryFormValues>({
     resolver: zodResolver(enquiryFormSchema),
@@ -69,13 +75,30 @@ export default function ServicesPage() {
   };
 
   function onSubmit(data: EnquiryFormValues) {
-    console.log(data);
-    toast({
-      title: "Enquiry Sent!",
-      description: "We've received your request and will get back to you within 24 hours.",
-    });
-    setIsDialogOpen(false);
-    form.reset();
+    if (!db) return;
+
+    const enquiryData = {
+      ...data,
+      timestamp: Date.now(),
+    };
+
+    addDoc(collection(db, "enquiries"), enquiryData)
+      .then(() => {
+        toast({
+          title: "Enquiry Sent!",
+          description: "We've received your request and will get back to you within 24 hours.",
+        });
+        setIsDialogOpen(false);
+        form.reset();
+      })
+      .catch(async (err) => {
+        const permissionError = new FirestorePermissionError({
+          path: 'enquiries',
+          operation: 'create',
+          requestResourceData: enquiryData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   }
 
   return (
@@ -84,7 +107,6 @@ export default function ServicesPage() {
       
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <header className="mb-24 text-center space-y-6">
             <Badge variant="outline" className="px-6 py-2 rounded-full border-primary/20 text-primary font-bold uppercase tracking-[0.2em] bg-primary/5">
               Premium Solutions
@@ -97,7 +119,6 @@ export default function ServicesPage() {
             </p>
           </header>
 
-          {/* Services Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {SERVICES.map((service) => {
               const Icon = service.icon;
@@ -147,7 +168,6 @@ export default function ServicesPage() {
             })}
           </div>
 
-          {/* Bottom CTA */}
           <div className="mt-32 p-16 md:p-24 rounded-[64px] bg-muted/30 border border-muted text-center space-y-10 relative overflow-hidden">
              <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
              <div className="relative z-10 space-y-8">

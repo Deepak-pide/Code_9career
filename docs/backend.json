@@ -14,6 +14,22 @@
       },
       "required": ["id", "label", "description", "icon", "color"]
     },
+    "Team": {
+      "title": "Core Team",
+      "description": "A specific project squad looking for members.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "company": { "type": "string" },
+        "description": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "seats": { "type": "string", "description": "e.g. '1/3'" },
+        "stipend": { "type": "string" },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "theme": { "type": "string", "enum": ["blue", "pink", "purple", "green", "amber", "cyan", "rose"] }
+      },
+      "required": ["name", "company", "description", "categoryId", "seats", "stipend", "skills", "theme"]
+    },
     "TeamRequest": {
       "title": "Team Request",
       "description": "A request from a student to join a specific team.",
@@ -49,6 +65,10 @@
     "/specializations/{specializationId}": {
       "schema": "Specialization",
       "description": "Available team categories."
+    },
+    "/teams/{teamId}": {
+      "schema": "Team",
+      "description": "Active project squads."
     },
     "/requests/{requestId}": {
       "schema": "TeamRequest",
