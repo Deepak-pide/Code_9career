@@ -1,53 +1,52 @@
-
-import { Sparkles, Users, ShieldCheck, Zap, BarChart3, Rocket } from "lucide-react";
+import { Megaphone, Code, Video, Image as ImageIcon, Music, MoreHorizontal } from "lucide-react";
 
 export const SERVICES = [
   {
-    id: "talent-sourcing",
-    title: "AI Talent Sourcing",
-    description: "Our proprietary AI engine scans our global registry to identify top 1% student talent specifically matched to your project requirements.",
-    icon: Sparkles,
+    id: "marketing",
+    title: "Marketing",
+    description: "Data-driven growth strategies and brand positioning for modern startups and content creators.",
+    icon: Megaphone,
     color: "blue",
-    features: ["Skill-based matching", "Cultural fit analysis", "Availability tracking"]
+    features: ["Social media growth", "Campaign management", "Brand identity"]
   },
   {
-    id: "team-assembly",
-    title: "Core Team Assembly",
-    description: "We don't just find individuals; we build squads. We assemble high-compatibility teams of developers and designers who work better together.",
-    icon: Users,
+    id: "web-dev",
+    title: "Web Development",
+    description: "High-performance full-stack applications built with the latest technologies for scale and speed.",
+    icon: Code,
     color: "purple",
-    features: ["Role balancing", "Compatibility testing", "Immediate onboarding"]
+    features: ["Next.js & React", "Backend architecture", "Responsive design"]
   },
   {
-    id: "technical-vetting",
-    title: "Technical Vetting",
-    description: "Every candidate undergoes rigorous technical screenings and portfolio audits by industry experts to ensure production-ready quality.",
-    icon: ShieldCheck,
-    color: "emerald",
-    features: ["Code reviews", "Portfolio verification", "Live technical interviews"]
-  },
-  {
-    id: "project-management",
-    title: "Managed Delivery",
-    description: "We provide end-to-end management for student teams, acting as a bridge between your goals and their execution for guaranteed results.",
-    icon: Zap,
-    color: "amber",
-    features: ["Agile oversight", "Quality assurance", "Weekly progress reports"]
-  },
-  {
-    id: "recruitment-strategy",
-    title: "Recruitment Strategy",
-    description: "Custom-built recruitment pipelines for high-growth startups looking to build a sustainable pipeline of junior and intern talent.",
-    icon: BarChart3,
+    id: "video-editor",
+    title: "Video Editor",
+    description: "Professional post-production and editing services optimized for high retention and engagement.",
+    icon: Video,
     color: "rose",
-    features: ["Campus outreach", "Brand positioning", "Pipeline automation"]
+    features: ["Color grading", "Motion graphics", "Sound design"]
   },
   {
-    id: "rapid-acceleration",
-    title: "Team Acceleration",
-    description: "On-demand training and mentorship for your existing student teams to bridge the gap between academic skills and professional standards.",
-    icon: Rocket,
+    id: "thumbnail",
+    title: "Thumbnail Design",
+    description: "Eye-catching visual assets engineered to maximize click-through rates and visual impact.",
+    icon: ImageIcon,
+    color: "amber",
+    features: ["Psychological design", "A/B testing", "Vibrant aesthetics"]
+  },
+  {
+    id: "music-production",
+    title: "Music Production",
+    description: "Custom audio engineering, composition, and soundscapes tailored to your unique brand voice.",
+    icon: Music,
+    color: "emerald",
+    features: ["Original scores", "Mixing & mastering", "Sound effects"]
+  },
+  {
+    id: "other-services",
+    title: "Custom Solutions",
+    description: "Bespoke talent partnerships and specialized services tailored to your unique project requirements.",
+    icon: MoreHorizontal,
     color: "cyan",
-    features: ["Tech stack training", "Soft skills coaching", "Architecture review"]
+    features: ["Consultancy", "Pipeline building", "Dedicated squads"]
   }
 ];
