@@ -1,9 +1,11 @@
+
 import { Navbar } from "@/components/layout/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { Calendar, Building2, MapPin, ExternalLink, Github, Linkedin, CheckCircle2 } from "lucide-react";
+import { Calendar, Building2, MapPin, Github, Linkedin, CheckCircle2, Trophy, Sparkles } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
+import { Footer } from "@/components/layout/Footer";
 
 const HIRED_STUDENTS = [
   {
@@ -13,7 +15,7 @@ const HIRED_STUDENTS = [
     college: "Stanford University",
     skills: ["React", "Typescript", "Tailwind"],
     joined: "Feb 2024",
-    status: "Hired",
+    status: "Elite Hired",
     image: PlaceHolderImages.find(img => img.id === 'student-1')?.imageUrl,
     theme: "blue"
   },
@@ -24,7 +26,7 @@ const HIRED_STUDENTS = [
     college: "MIT",
     skills: ["Figma", "UX Strategy", "Cinema4D"],
     joined: "Jan 2024",
-    status: "Core Team",
+    status: "Elite Core",
     image: PlaceHolderImages.find(img => img.id === 'student-2')?.imageUrl,
     theme: "pink"
   },
@@ -35,7 +37,7 @@ const HIRED_STUDENTS = [
     college: "UC Berkeley",
     skills: ["Directing", "Editing", "Sound Design"],
     joined: "Mar 2024",
-    status: "Active",
+    status: "Elite Active",
     image: PlaceHolderImages.find(img => img.id === 'student-3')?.imageUrl,
     theme: "cyan"
   },
@@ -46,7 +48,7 @@ const HIRED_STUDENTS = [
     college: "Georgia Tech",
     skills: ["Maya", "After Effects", "Rive"],
     joined: "Dec 2023",
-    status: "Hired",
+    status: "Elite Hired",
     image: PlaceHolderImages.find(img => img.id === 'student-4')?.imageUrl,
     theme: "purple"
   }
@@ -54,15 +56,20 @@ const HIRED_STUDENTS = [
 
 export default function ShowcasePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       
       <main className="flex-grow pt-32 pb-24 px-6">
         <div className="max-w-7xl mx-auto">
           <header className="mb-20 space-y-6 text-center">
-            <h1 className="text-5xl md:text-7xl font-headline font-bold">The <span className="vibrant-text italic underline">Alumni</span> Network</h1>
-            <p className="text-muted-foreground text-xl max-w-2xl mx-auto font-medium leading-relaxed">
-              Meet the elite students who landed roles in world-class squads through the Code-9 ecosystem.
+            <Badge variant="outline" className="px-6 py-2 rounded-full border-primary/20 text-primary font-bold uppercase tracking-[0.2em] bg-primary/5">
+              Hall of Fame
+            </Badge>
+            <h1 className="text-5xl md:text-8xl font-headline font-bold tracking-tighter leading-none">
+              CODE-9 <span className="vibrant-text italic">Elite Members.</span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
+              Celebrating the high-impact students who have achieved legendary status within the Code-9 ecosystem.
             </p>
           </header>
 
@@ -79,19 +86,23 @@ export default function ShowcasePage() {
                       data-ai-hint="person portrait"
                     />
                   )}
-                  <div className="absolute top-5 right-5">
+                  <div className="absolute top-5 right-5 z-10">
                     <Badge className={cn(
-                      "rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest shadow-lg",
-                      student.status === 'Hired' && "bg-green-500 hover:bg-green-600",
-                      student.status === 'Core Team' && "bg-primary hover:bg-primary/90",
-                      student.status === 'Active' && "bg-blue-500 hover:bg-blue-600",
+                      "rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest shadow-lg border-none flex items-center gap-1.5",
+                      student.status.includes('Hired') && "bg-emerald-500 text-white",
+                      student.status.includes('Core') && "bg-primary text-white",
+                      student.status.includes('Active') && "bg-blue-500 text-white",
                     )}>
+                      <Trophy size={10} />
                       {student.status}
                     </Badge>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                    <h3 className="text-2xl font-headline font-bold text-white mb-1">{student.name}</h3>
-                    <p className="text-sm font-bold text-white/80 uppercase tracking-widest">{student.role}</p>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      <h3 className="text-2xl font-headline font-bold text-white leading-none">{student.name}</h3>
+                    </div>
+                    <p className="text-xs font-bold text-white/70 uppercase tracking-widest">{student.role}</p>
                   </div>
                 </div>
                 
@@ -102,8 +113,8 @@ export default function ShowcasePage() {
                         <Building2 size={20} />
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Hired By</p>
-                        <p className="font-bold text-sm">{student.company}</p>
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest leading-none mb-1">Impact at</p>
+                        <p className="font-bold text-sm leading-none">{student.company}</p>
                       </div>
                     </div>
                   </div>
@@ -143,7 +154,7 @@ export default function ShowcasePage() {
           <div className="mt-32 text-center space-y-10 bg-primary rounded-[64px] p-20 md:p-32 text-white relative overflow-hidden shadow-2xl shadow-primary/30">
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[800px] h-[800px] bg-white/10 rounded-full blur-[150px]"></div>
             <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-              <h2 className="text-4xl md:text-6xl font-headline font-bold leading-tight italic">"The core team model allowed me to show how I work in a squad, not just how I code in a vacuum."</h2>
+              <h2 className="text-4xl md:text-6xl font-headline font-bold leading-tight italic">"Being an Elite Member means pushing the boundaries of what a student squad can achieve."</h2>
               <div className="space-y-2">
                 <p className="text-2xl font-bold">Alex Rivera</p>
                 <p className="text-sm uppercase tracking-[0.3em] font-black opacity-70">Senior Web Developer @ NextGen AI</p>
@@ -152,6 +163,7 @@ export default function ShowcasePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
