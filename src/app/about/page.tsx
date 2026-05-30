@@ -100,7 +100,7 @@ export default function AboutPage() {
                   </Button>
                 </Link>
                 <Link href="/services">
-                  <Button size="lg" variant="outline" className="h-16 px-12 rounded-full border-2 border-white text-white font-bold text-xl hover:bg-white/10 transition-all">
+                  <Button size="lg" variant="outline" className="h-16 px-12 rounded-full border-2 border-white text-white font-bold text-xl hover:bg-white hover:text-primary transition-all hover:scale-105">
                     Partner with Us
                   </Button>
                 </Link>
