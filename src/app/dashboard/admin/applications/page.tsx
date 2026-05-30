@@ -1,25 +1,26 @@
-
 "use client";
 
 import { SidebarProvider, SidebarInset, SidebarTrigger, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { FileText, Briefcase, BarChart3, Users, Settings, LogOut, Bell, Sparkles, CheckCircle2, XCircle } from "lucide-react";
+import { FileText, Briefcase, BarChart3, Users, Settings, LogOut, Sparkles, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { adminApplicantSummarizer } from "@/ai/flows/admin-applicant-summarizer";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
-
-const APPLICATIONS = [
-  { id: "1", name: "Alex Rivera", role: "Frontend Developer", date: "2024-03-20", status: "Pending", portfolio: "https://alex.dev", github: "https://github.com/alex" },
-  { id: "2", name: "Elena Rodriguez", role: "AI Researcher", date: "2024-03-18", status: "Accepted", portfolio: "https://elena.ai", github: "https://github.com/elena" },
-  { id: "3", name: "Marcus Thorne", role: "Backend Architect", date: "2024-03-15", status: "Pending", portfolio: "https://marcus.cloud", github: "https://github.com/marcus" },
-];
+import { useFirestore, useCollection } from "@/firebase";
+import { collection, updateDoc, doc } from "firebase/firestore";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function ApplicationsPage() {
+  const db = useFirestore();
+  const requestsQuery = useMemo(() => db ? collection(db, "requests") : null, [db]);
+  const { data: applications, loading: requestsLoading } = useCollection(requestsQuery);
+
   const [summaries, setSummaries] = useState<Record<string, { summary: string; score: number }>>({});
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [selectedSummary, setSelectedSummary] = useState<{ name: string; summary: string; score: number } | null>(null);
@@ -27,13 +28,9 @@ export default function ApplicationsPage() {
   const handleSummarize = async (appId: string, name: string) => {
     setLoadingId(appId);
     try {
-      // For demo, using a mock resume data URI or real flow if data is available
-      // In real scenario, we'd fetch this from Firebase
       const result = await adminApplicantSummarizer({
         resumeDataUri: "data:text/plain;base64,VGhpcyBpcyBhIHJlc3VtZSBmb3IgYSBza2lsbGVkIGRldmVsb3BlciB3aXRoIDUgeWVhcnMgb2YgZXhwZXJpZW5jZS4=",
         jobDescription: "Looking for a proactive developer who understands React and systems architecture.",
-        portfolioLink: "https://example.com",
-        linkedInGitHubLink: "https://github.com/example"
       });
       
       setSummaries(prev => ({ ...prev, [appId]: { summary: result.summary, score: result.relevanceScore } }));
@@ -44,6 +41,19 @@ export default function ApplicationsPage() {
     } finally {
       setLoadingId(null);
     }
+  };
+
+  const handleUpdateStatus = (appId: string, status: 'accepted' | 'rejected') => {
+    if (!db) return;
+    updateDoc(doc(db, "requests", appId), { status })
+      .then(() => toast({ title: "Updated", description: `Application ${status}.` }))
+      .catch(async (err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: `requests/${appId}`,
+          operation: 'update',
+          requestResourceData: { status },
+        }));
+      });
   };
 
   return (
@@ -58,111 +68,79 @@ export default function ApplicationsPage() {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu className="px-2">
-              <SidebarMenuItem>
-                <Link href="/dashboard/admin" className="w-full">
-                  <SidebarMenuButton tooltip="Overview">
-                    <BarChart3 /> <span>Overview</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton isActive tooltip="Applications">
-                  <FileText /> <span>Applications</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Opportunities">
-                  <Briefcase /> <span>Opportunities</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Talent">
-                  <Users /> <span>Talent Management</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Settings">
-                  <Settings /> <span>Settings</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SidebarMenuItem><Link href="/dashboard/admin"><SidebarMenuButton tooltip="Overview"><BarChart3 /> <span>Overview</span></SidebarMenuButton></Link></SidebarMenuItem>
+              <SidebarMenuItem><SidebarMenuButton isActive tooltip="Applications"><FileText /> <span>Applications</span></SidebarMenuButton></SidebarMenuItem>
+              <SidebarMenuItem><Link href="/dashboard/admin/console"><SidebarMenuButton tooltip="Control Center"><Settings /> <span>Control Center</span></SidebarMenuButton></Link></SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
-          <div className="mt-auto p-4">
-            <Button variant="ghost" className="w-full justify-start gap-2 text-muted-foreground">
-              <LogOut size={18} />
-              Logout
-            </Button>
-          </div>
         </Sidebar>
 
         <SidebarInset className="flex flex-col">
           <header className="flex h-16 shrink-0 items-center justify-between px-6 border-b">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
-              <div className="h-6 w-px bg-border hidden md:block"></div>
-              <h2 className="font-headline font-bold text-lg hidden md:block">Manage Applications</h2>
+              <div className="h-6 w-px bg-border"></div>
+              <h2 className="font-headline font-bold text-lg">Manage Applications</h2>
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto p-6 space-y-6">
+          <main className="flex-1 p-6 space-y-6">
             <div className="flex justify-between items-center">
               <h1 className="text-3xl font-headline font-bold">Inbound Applications</h1>
-              <Badge variant="secondary" className="px-4 py-1 rounded-full uppercase tracking-widest text-[10px] font-bold">
-                {APPLICATIONS.length} Pending
+              <Badge variant="secondary" className="px-4 py-1 rounded-full">
+                {applications?.length || 0} Total
               </Badge>
             </div>
 
             <div className="bento-card border-none shadow-sm overflow-hidden bg-white">
-              <Table>
-                <TableHeader className="bg-muted/30">
-                  <TableRow>
-                    <TableHead className="font-bold">Applicant</TableHead>
-                    <TableHead className="font-bold">Position</TableHead>
-                    <TableHead className="font-bold">Date</TableHead>
-                    <TableHead className="font-bold">Status</TableHead>
-                    <TableHead className="font-bold text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {APPLICATIONS.map((app) => (
-                    <TableRow key={app.id} className="hover:bg-muted/10 transition-colors">
-                      <TableCell>
-                        <div className="font-bold">{app.name}</div>
-                        <div className="text-xs text-muted-foreground flex gap-2">
-                          <Link href={app.github} className="hover:text-primary">GitHub</Link>
-                          <span>•</span>
-                          <Link href={app.portfolio} className="hover:text-primary">Portfolio</Link>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">{app.role}</TableCell>
-                      <TableCell className="text-muted-foreground">{app.date}</TableCell>
-                      <TableCell>
-                        <Badge variant={app.status === 'Accepted' ? 'default' : 'secondary'} className="rounded-full px-3">
-                          {app.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="rounded-full gap-2 border-primary/20 hover:bg-primary/5 text-primary"
-                          onClick={() => handleSummarize(app.id, app.name)}
-                          disabled={loadingId === app.id}
-                        >
-                          <Sparkles size={14} className={loadingId === app.id ? "animate-pulse" : ""} />
-                          {summaries[app.id] ? "View AI Summary" : (loadingId === app.id ? "Analyzing..." : "AI Summarize")}
-                        </Button>
-                        <Button size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50">
-                          <CheckCircle2 size={18} />
-                        </Button>
-                        <Button size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50">
-                          <XCircle size={18} />
-                        </Button>
-                      </TableCell>
+              {requestsLoading ? (
+                <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary h-8 w-8" /></div>
+              ) : (
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow>
+                      <TableHead className="font-bold">Applicant</TableHead>
+                      <TableHead className="font-bold">Team</TableHead>
+                      <TableHead className="font-bold">Status</TableHead>
+                      <TableHead className="font-bold text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {applications?.map((app: any) => (
+                      <TableRow key={app._id} className="hover:bg-muted/10 transition-colors">
+                        <TableCell>
+                          <div className="font-bold">{app.userName}</div>
+                          <div className="text-xs text-muted-foreground">{app.userEmail}</div>
+                        </TableCell>
+                        <TableCell className="font-medium">{app.teamName}</TableCell>
+                        <TableCell>
+                          <Badge variant={app.status === 'accepted' ? 'default' : 'secondary'} className="rounded-full px-3">
+                            {app.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right space-x-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="rounded-full gap-2 border-primary/20 hover:bg-primary/5 text-primary"
+                            onClick={() => handleSummarize(app._id, app.userName)}
+                            disabled={loadingId === app._id}
+                          >
+                            <Sparkles size={14} className={loadingId === app._id ? "animate-pulse" : ""} />
+                            {summaries[app._id] ? "View AI Summary" : (loadingId === app._id ? "Analyzing..." : "AI Summarize")}
+                          </Button>
+                          <Button size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0 text-green-600" onClick={() => handleUpdateStatus(app._id, 'accepted')}>
+                            <CheckCircle2 size={18} />
+                          </Button>
+                          <Button size="sm" variant="ghost" className="rounded-full h-8 w-8 p-0 text-red-600" onClick={() => handleUpdateStatus(app._id, 'rejected')}>
+                            <XCircle size={18} />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </div>
           </main>
         </SidebarInset>
@@ -188,17 +166,10 @@ export default function ApplicationsPage() {
                 </div>
                 <Progress value={selectedSummary?.score} className="h-3 rounded-full bg-muted" />
               </div>
-
               <div className="space-y-4">
-                <h4 className="font-bold text-lg flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-primary" />
-                  Executive Summary
-                </h4>
-                <div className="bg-muted/30 rounded-[20px] p-6 text-muted-foreground leading-relaxed italic border">
-                  "{selectedSummary?.summary}"
-                </div>
+                <h4 className="font-bold text-lg flex items-center gap-2"><FileText className="h-5 w-5 text-primary" />Executive Summary</h4>
+                <div className="bg-muted/30 rounded-[20px] p-6 text-muted-foreground leading-relaxed italic border">"{selectedSummary?.summary}"</div>
               </div>
-
               <div className="flex justify-end gap-3 pt-4">
                 <Button variant="outline" className="rounded-full px-8" onClick={() => setSelectedSummary(null)}>Close</Button>
                 <Button className="rounded-full px-8 shadow-lg shadow-primary/20">Proceed to Interview</Button>

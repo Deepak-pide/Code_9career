@@ -14,6 +14,8 @@ import { collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestor
 import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Settings, LogOut, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const ADMIN_EMAIL = "codenine0504@gmail.com";
 
@@ -52,10 +54,18 @@ export default function AdminConsole() {
   const handleAddSpecialization = () => {
     if (!db) return;
     const id = newSpec.label.toLowerCase().replace(/\s+/g, "-");
-    addDoc(collection(db, "specializations"), { ...newSpec, id })
+    const data = { ...newSpec, id };
+    addDoc(collection(db, "specializations"), data)
       .then(() => {
         toast({ title: "Success", description: "Specialization added." });
         setNewSpec({ label: "", description: "", icon: "Code", imageUrl: "", color: "blue" });
+      })
+      .catch(async (err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: 'specializations',
+          operation: 'create',
+          requestResourceData: data,
+        }));
       });
   };
 
@@ -70,17 +80,38 @@ export default function AdminConsole() {
       .then(() => {
         toast({ title: "Success", description: "Team squad created." });
         setNewTeam({ name: "", company: "", description: "", categoryId: "", seats: "1/3", stipend: "$1,500/mo", skills: "", theme: "blue" });
+      })
+      .catch(async (err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: 'teams',
+          operation: 'create',
+          requestResourceData: teamData,
+        }));
       });
   };
 
   const handleDeleteDoc = (coll: string, docId: string) => {
     if (!db) return;
-    deleteDoc(doc(db, coll, docId)).then(() => toast({ title: "Deleted", description: "Record removed." }));
+    deleteDoc(doc(db, coll, docId))
+      .then(() => toast({ title: "Deleted", description: "Record removed." }))
+      .catch(async (err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: `${coll}/${docId}`,
+          operation: 'delete',
+        }));
+      });
   };
 
   const handleUpdateStatus = (coll: string, docId: string, status: string) => {
     if (!db) return;
-    updateDoc(doc(db, coll, docId), { status });
+    updateDoc(doc(db, coll, docId), { status })
+      .catch(async (err) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: `${coll}/${docId}`,
+          operation: 'update',
+          requestResourceData: { status },
+        }));
+      });
   };
 
   return (
@@ -156,6 +187,17 @@ export default function AdminConsole() {
                     <Button onClick={handleAddTeam} className="col-span-full">Launch Team</Button>
                   </CardContent>
                 </Card>
+                <div className="grid grid-cols-1 gap-4">
+                  {teams?.map((team: any) => (
+                    <Card key={team._id} className="bento-card p-6 flex justify-between items-center">
+                      <div>
+                        <h4 className="font-bold">{team.name}</h4>
+                        <p className="text-sm text-muted-foreground">{team.company} • {team.categoryId}</p>
+                      </div>
+                      <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDeleteDoc('teams', team._id)}><Trash2 size={16} /></Button>
+                    </Card>
+                  ))}
+                </div>
               </TabsContent>
 
               <TabsContent value="requests">
@@ -193,6 +235,7 @@ export default function AdminConsole() {
                       <div className="flex justify-between"><Badge>{enq.service}</Badge></div>
                       <div><h4 className="font-bold">{enq.name}</h4><p className="text-xs">{enq.email}</p></div>
                       <p className="bg-muted/30 p-4 rounded-xl text-sm italic">"{enq.message}"</p>
+                      <Button variant="ghost" size="sm" className="text-destructive w-full" onClick={() => handleDeleteDoc('enquiries', enq._id)}>Archive Enquiry</Button>
                     </Card>
                   ))}
                 </div>
