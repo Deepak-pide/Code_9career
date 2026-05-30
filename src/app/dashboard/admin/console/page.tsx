@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, addDoc, deleteDoc, doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Briefcase, Users, Settings, LogOut, Sparkles } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, XCircle, Layout, MessageSquare, ShieldCheck, BarChart3, FileText, Briefcase, Users, Settings, LogOut, Sparkles, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/hooks/use-toast";
 
@@ -33,7 +33,7 @@ export default function AdminConsole() {
   const { data: requests } = useCollection(requestsQuery);
   const { data: enquiries } = useCollection(enquiriesQuery);
 
-  const [newSpec, setNewSpec] = useState({ label: "", description: "", icon: "Code", color: "blue" });
+  const [newSpec, setNewSpec] = useState({ label: "", description: "", icon: "Code", imageUrl: "", color: "blue" });
   const [newTeam, setNewTeam] = useState({ name: "", company: "", description: "", categoryId: "", seats: "1/5", stipend: "$1,500/mo", skills: "", theme: "blue" });
 
   if (!user || user.email !== ADMIN_EMAIL) {
@@ -57,7 +57,7 @@ export default function AdminConsole() {
     addDoc(collection(db, "specializations"), { ...newSpec, id })
       .then(() => {
         toast({ title: "Success", description: "Specialization added." });
-        setNewSpec({ label: "", description: "", icon: "Code", color: "blue" });
+        setNewSpec({ label: "", description: "", icon: "Code", imageUrl: "", color: "blue" });
       });
   };
 
@@ -138,16 +138,26 @@ export default function AdminConsole() {
                   <CardHeader><CardTitle>Add Specialization</CardTitle></CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="space-y-2"><Label>Label</Label><Input value={newSpec.label} onChange={e => setNewSpec({ ...newSpec, label: e.target.value })} /></div>
-                    <div className="space-y-2"><Label>Icon</Label><Input value={newSpec.icon} onChange={e => setNewSpec({ ...newSpec, icon: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Icon (Lucide Name)</Label><Input value={newSpec.icon} onChange={e => setNewSpec({ ...newSpec, icon: e.target.value })} /></div>
+                    <div className="space-y-2"><Label>Image URL (Optional)</Label><Input placeholder="https://..." value={newSpec.imageUrl} onChange={e => setNewSpec({ ...newSpec, imageUrl: e.target.value })} /></div>
                     <div className="space-y-2"><Label>Description</Label><Input value={newSpec.description} onChange={e => setNewSpec({ ...newSpec, description: e.target.value })} /></div>
-                    <Button onClick={handleAddSpecialization} className="mt-auto rounded-xl">Add</Button>
+                    <Button onClick={handleAddSpecialization} className="col-span-1 md:col-span-4 mt-auto rounded-xl h-12">Add Specialization</Button>
                   </CardContent>
                 </Card>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {specializations?.map((spec: any) => (
-                    <Card key={spec._id} className="bento-card p-6 flex justify-between">
-                      <div><h4 className="font-bold">{spec.label}</h4><p className="text-xs text-muted-foreground">{spec.description}</p></div>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteDoc('specializations', spec._id)}><Trash2 size={16} /></Button>
+                    <Card key={spec._id} className="bento-card p-6 flex justify-between items-center group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center overflow-hidden">
+                           {spec.imageUrl ? (
+                             <img src={spec.imageUrl} alt={spec.label} className="w-full h-full object-cover" />
+                           ) : (
+                             <Layout size={20} className="text-primary" />
+                           )}
+                        </div>
+                        <div><h4 className="font-bold">{spec.label}</h4><p className="text-xs text-muted-foreground">{spec.description}</p></div>
+                      </div>
+                      <Button variant="ghost" size="icon" className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDeleteDoc('specializations', spec._id)}><Trash2 size={16} /></Button>
                     </Card>
                   ))}
                 </div>
@@ -167,9 +177,9 @@ export default function AdminConsole() {
                 </Card>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {teams?.map((team: any) => (
-                    <Card key={team._id} className="bento-card p-6 flex justify-between">
+                    <Card key={team._id} className="bento-card p-6 flex justify-between items-center group">
                       <div><h4 className="font-bold">{team.name}</h4><p className="text-xs text-muted-foreground">{team.company} • {team.categoryId}</p></div>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteDoc('teams', team._id)}><Trash2 size={16} /></Button>
+                      <Button variant="ghost" size="icon" className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDeleteDoc('teams', team._id)}><Trash2 size={16} /></Button>
                     </Card>
                   ))}
                 </div>

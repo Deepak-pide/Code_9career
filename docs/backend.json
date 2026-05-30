@@ -10,9 +10,10 @@
         "label": { "type": "string" },
         "description": { "type": "string" },
         "icon": { "type": "string", "description": "Lucide icon name" },
+        "imageUrl": { "type": "string", "description": "Optional URL for a custom icon or logo" },
         "color": { "type": "string", "enum": ["blue", "pink", "purple", "amber", "rose", "cyan", "indigo"] }
       },
-      "required": ["id", "label", "description", "icon", "color"]
+      "required": ["id", "label", "description", "color"]
     },
     "Team": {
       "title": "Core Team",

@@ -4,14 +4,19 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Briefcase, Loader2 } from "lucide-react";
+import { ChevronLeft, Briefcase, Loader2, Code, Layout, Play, Image as ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Footer } from "@/components/layout/Footer";
 import { useFirestore, useCollection, useDoc } from "@/firebase";
 import { collection, query, where, doc } from "firebase/firestore";
 import { useMemo } from "react";
+
+const ICON_MAP: Record<string, any> = {
+  Code, Layout, Play, ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal
+};
 
 export default function CategoryTeamsPage() {
   const params = useParams();
@@ -53,6 +58,8 @@ export default function CategoryTeamsPage() {
     );
   }
 
+  const Icon = ICON_MAP[category.icon] || Briefcase;
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
@@ -70,7 +77,7 @@ export default function CategoryTeamsPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-5">
                   <div className={cn(
-                    "w-16 h-16 rounded-[24px] flex items-center justify-center text-white shadow-2xl transition-transform hover:scale-110 duration-500",
+                    "w-16 h-16 rounded-[24px] flex items-center justify-center text-white shadow-2xl transition-transform hover:scale-110 duration-500 bg-muted overflow-hidden",
                     category.color === 'blue' && "bg-blue-500 shadow-blue-500/20",
                     category.color === 'pink' && "bg-pink-500 shadow-pink-500/20",
                     category.color === 'purple' && "bg-purple-500 shadow-purple-500/20",
@@ -79,7 +86,13 @@ export default function CategoryTeamsPage() {
                     category.color === 'cyan' && "bg-cyan-500 shadow-cyan-500/20",
                     category.color === 'indigo' && "bg-indigo-500 shadow-indigo-500/20",
                   )}>
-                    <Briefcase size={32} />
+                    {category.imageUrl ? (
+                      <div className="relative w-full h-full">
+                        <Image src={category.imageUrl} alt={category.label} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <Icon size={32} />
+                    )}
                   </div>
                   <h1 className="text-5xl md:text-7xl font-headline font-bold tracking-tighter leading-none">
                     {category.label} <span className="text-muted-foreground/20 italic">Units</span>

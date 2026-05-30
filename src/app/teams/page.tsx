@@ -3,17 +3,18 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowRight, Loader2, Code, Layout, Play, Image as ImageIcon, Video, Camera, Mic2 } from "lucide-react";
+import { Search, ArrowRight, Loader2, Code, Layout, Play, Image as ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 import { useFirestore, useCollection } from "@/firebase";
 import { collection } from "firebase/firestore";
 import { Footer } from "@/components/layout/Footer";
 
 const ICON_MAP: Record<string, any> = {
-  Code, Layout, Play, ImageIcon, Video, Camera, Mic2
+  Code, Layout, Play, ImageIcon, Video, Camera, Mic2, Palette, Globe, Cpu, Smartphone, PenTool, Database, Terminal
 };
 
 export default function TeamsPage() {
@@ -63,7 +64,7 @@ export default function TeamsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCategories.map((cat: any) => {
-                const Icon = ICON_MAP[cat.icon] || Code;
+                const Icon = ICON_MAP[cat.icon] || Layout;
                 return (
                   <Link key={cat._id} href={`/teams/${cat.id}`}>
                     <div className={cn(
@@ -83,7 +84,7 @@ export default function TeamsPage() {
 
                       <div className="space-y-6 relative z-10">
                         <div className={cn(
-                          "w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3",
+                          "w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 overflow-hidden bg-muted",
                           cat.color === 'blue' && "bg-blue-500 shadow-blue-500/20",
                           cat.color === 'pink' && "bg-pink-500 shadow-pink-500/20",
                           cat.color === 'purple' && "bg-purple-500 shadow-purple-500/20",
@@ -92,7 +93,18 @@ export default function TeamsPage() {
                           cat.color === 'cyan' && "bg-cyan-500 shadow-cyan-500/20",
                           cat.color === 'indigo' && "bg-indigo-500 shadow-indigo-500/20",
                         )}>
-                          <Icon size={32} />
+                          {cat.imageUrl ? (
+                            <div className="relative w-full h-full">
+                               <Image 
+                                 src={cat.imageUrl} 
+                                 alt={cat.label} 
+                                 fill 
+                                 className="object-cover" 
+                               />
+                            </div>
+                          ) : (
+                            <Icon size={32} />
+                          )}
                         </div>
                         
                         <div className="space-y-2">
