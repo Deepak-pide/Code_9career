@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
@@ -91,7 +90,7 @@ export default function ServicesPage() {
               Premium Solutions
             </Badge>
             <h1 className="text-5xl md:text-8xl font-headline font-bold tracking-tighter leading-none">
-              Elite <span className="vibrant-text italic">Hiring Services.</span>
+              CODE-9 <span className="vibrant-text italic">Elite Services</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
               From individual sourcing to fully-managed core teams, we provide the infrastructure for high-growth startups to leverage student talent.
